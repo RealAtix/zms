@@ -11,7 +11,16 @@ path = "src/lib.rs"
 path = "src/main.rs"
 name = "zms-server"
 
+[[bin]]
+path = "src/client.rs"
+name = "zms-client"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = { version = "1", features = ["full"]}
+tokio = { version = "1.20.0", features = ["full"]}
+futures = "0.3.21"
+bytes = "*"
+bincode = "1"
+tokio-util = { version = "0.7.3", features = ["codec"]}
+serde = { version = "1.0", features = ["derive"] }
