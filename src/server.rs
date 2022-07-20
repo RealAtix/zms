@@ -1,24 +1,36 @@
+use std::process;
+
 use ::futures::{SinkExt, StreamExt};
+use env_logger::Env;
+use log::{debug, info};
 use tokio::{net::TcpListener, sync::broadcast};
 use tokio_util::codec::{Framed, LengthDelimitedCodec};
 use zms::Msg;
 
 #[tokio::main]
 async fn main() {
-    let address = "localhost:8080";
+    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
+
+    let host: String = "localhost".to_string();
+    let port: u16 = 8080;
+    let address = format!("{}:{}", host, port);
+
+    info!(
+        "Zoomies server starting : pid={} host={} port={}",
+        process::id(),
+        host,
+        port
+    );
     let listener = TcpListener::bind(address)
         .await
-        .unwrap_or_else(|_| panic!("Could not bind to address {}", address));
-    println!(
-        "Zoomies server is listening on {:?}",
-        listener.local_addr().unwrap()
-    );
+        .expect("Failed to bind address");
+    info!("Listening on {:?}", listener.local_addr().unwrap());
 
     let (tx, _rx) = broadcast::channel(16);
 
     loop {
         let (socket, addr) = listener.accept().await.unwrap();
-        println!("Connection from {}", addr);
+        debug!("Connection from {}", addr);
         let tx = tx.clone();
         let mut rx = tx.subscribe();
 
@@ -29,7 +41,7 @@ async fn main() {
             loop {
                 tokio::select! {
                     result = stream.next() => {
-                        println!("Received from {}: {:?}", addr, result);
+                        debug!("Received from {} frame: {:?}", addr, result);
                         let result = match result.transpose() {
                             Ok(o) => o,
                             Err(_) => break
@@ -37,7 +49,7 @@ async fn main() {
                         let result = match result {
                             Some(value) => value,
                             None => {
-                                println!("Client {} disconnected", addr);
+                                debug!("Client {} disconnected", addr);
                                 break;
                             }
                         };
@@ -48,7 +60,7 @@ async fn main() {
                         let (msg, sender_addr) = result.unwrap();
 
                         if addr != sender_addr {
-                        println!("Sending from {} to {}: {:?}", sender_addr, addr, msg);
+                        debug!("Sending from {} to {}: {:?}", sender_addr, addr, msg);
                             let encoded = bincode::serialize(&msg).unwrap();
                             sink.send(encoded.into()).await.unwrap();
                         }
