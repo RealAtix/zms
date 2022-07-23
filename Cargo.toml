@@ -3,6 +3,7 @@ name = "zms"
 version = "0.1.0"
 authors = ["Razvan Nicolescu <raz@raztech.io>"]
 edition = "2021"
+description = "A simple, secure and anonymous end-to-end web chat"
 
 [lib]
 path = "src/lib.rs"
@@ -15,14 +16,14 @@ name = "zms-server"
 path = "src/client.rs"
 name = "zms-client"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 tokio = { version = "1.20.0", features = ["full"]}
 futures = "0.3.21"
-bytes = "*"
 bincode = "1"
 tokio-util = { version = "0.7.3", features = ["codec"]}
 serde = { version = "1.0", features = ["derive"] }
 log = "0.4.17"
 env_logger = "0.9.0"
+clap = { version = "3.2.13", features = ["derive"] }
+dashmap = "5.3.4"
+lazy_static = "1.4.0"
