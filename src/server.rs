@@ -123,6 +123,7 @@ async fn main() {
                                 tx.send((msg, addr)).unwrap();
                             },
                             MessageKind::SetName(name) => {
+                                // TODO: this is a server wide name change
                                 debug!("Client {} changed name from {} to {}", addr, client.name, &name);
                                 let msg = Message {
                                     kind: MessageKind::Message("Server".to_string(), format!("{} changed name to {}", client.name, name)),
