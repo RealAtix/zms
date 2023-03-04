@@ -1,13 +1,9 @@
 # zms
 
-_A simple, anonymous end-to-end web chat built using Rust_
+**zms** is a simple, anonymous end-to-end web chat application built using Rust.
 
 ## About
 
-Zoomies (zms in short) is a simple chat application written using TCP sockets.  
-Clients connect to a channel on a server which lets them talk to eachother in said channel.
-The clients connected to a channel are able to set a secret which will be used to encrypt the sent messages.
-All clients connecting to that specific channel must set the same secret to be able to decrypt the messages received.
-A channel stops existing once the last connection closes.
+Welcome to **Zoomies** (zms)! It is a straightforward chat application created using TCP sockets. Once clients connect to a server's channel, they can communicate with each other in that specific channel. Furthermore, clients can choose to set a secret that will be utilized to encrypt the messages they send. To decrypt the messages received, all clients connected to the same channel must use the same secret.
 
-Note that the encryption is not yet implemented. I also plan to build an accompanying desktop app built using Tauri.
+Please note that the encryption feature hasn't been implemented yet, but it's on the roadmap. Additionally, there are plans to create a desktop app using Tauri that will complement the web-based application. Lastly, channels are automatically closed once the last connection is terminated.
